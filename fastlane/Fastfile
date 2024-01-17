@@ -34,7 +34,7 @@ platform :ios do
       scheme: "TurboCalculator",
       derived_data_path: "DerivedData",
       output_directory: "Report",
-      device: "iPhone 15",
+      device: "iPhone 14",
       app_identifier: "QAGuru.Calculator",
       reinstall_app: true,
       test_without_building: true,
