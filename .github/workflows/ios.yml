@@ -1,4 +1,4 @@
-name: iOS UI-tests
+name: iOS starter workflow
 
 on:
   workflow_dispatch:
@@ -12,47 +12,16 @@ on:
           - regress
           - smoke
 
-env:
-  LC_ALL: en_US.UTF-8
-  LANG: en_US.UTF-8
-
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
     runs-on: macos
-
     steps:
       - name: Checkout git
         uses: actions/checkout@v3
-      - name: Get info
-        run: env
-      - name: Clean old files
-        run: |
-          rm -rf ./DerivedData
-          rm -rf ./Report
-          rm -rf xcresults
       - name: Setup env
-        run: |
-          ruby -v
-          bundle install
+        run: env
       - name: Build app
-        run: fastlane ios build_calculator
+        run: pwd
       - name: Run tests
-        run: fastlane ios test_app
-      - name: Install xcresults
-        if: ${{ always()}}
-        run: |
-          curl -OL https://github.com/eroshenkoam/xcresults/releases/latest/download/xcresults
-          chmod +x xcresults
-      - name: Convert to allure results
-        if: ${{ always()}}
-        run: |
-          ./xcresults export ./Report/TurboCalculator.xcresult ./allure-results
-      - name: Save allure results
-        if: ${{ always()}}
-        uses: actions/upload-artifact@v4.1.0
-        with:
-          name: Allure
-          path: allure-results
-          retention-days: 30
-        
+        run: pwd
