@@ -11,7 +11,11 @@ on:
           - debug
           - regress
           - smoke
-
+env:
+  LC_ALL: 'en_US.UTF-8'
+  LANG: 'en_US.UTF-8'
+  LANGUAGE: 'en_US.UTF-8'
+  
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
@@ -19,9 +23,39 @@ jobs:
     steps:
       - name: Checkout git
         uses: actions/checkout@v4
-      - name: Setup env
-        run: env
+        
+      - name: Clean cache files
+        run: |
+          rm -rf ./DerivedData
+          rm -rf ./Report
+          rm -rf ./allure-results
+          rm -rf xcresults
+          rm -rf allurectl
+          
+      - name: Install ruby dependencies
+        run: bundle install
+        
       - name: Build app
-        run: pwd
-      - name: Run tests
-        run: pwd
+        run: fastlane ios build_calculator
+
+      - name: Run UI-tests
+        run: fastlane ios test_app
+
+      - name: Install xcresults
+        if: ${{ always()}}
+        run: |
+          curl -OL https://github.com/eroshenkoam/xcresults/releases/latest/download/xcresults
+          chmod +x xcresults
+
+      - name: Convert xcresult to allure-results
+        if: ${{ always()}}
+        run: |
+          ./xcresults export ./Report/TurboCalculator.xcresult ./allure-results
+
+      - name: Save allure-results
+        if: ${{ always()}}
+        uses: actions/upload-artifact@v4.1.0
+        with:
+          name: Allure
+          path: allure-results
+          retention-days: 15
