@@ -92,7 +92,7 @@ jobs:
         if: ${{ always()}}
         run: |
           ./allurectl upload \
-            --endpoint https://allure.autotests.cloud/ \
+            --endpoint https://allure.qa.guru/ \
             --token ${{ secrets.ALLURE_TOKEN }} \
             --project-id 3978 \
             --launch-name  "Launch: ${{ github.run_number }} Test plan: ${{ env.TESTPLAN }} Device: ${{ env.DEVICE }}" \
